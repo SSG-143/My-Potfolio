@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAXIMUM MOTION PORTFOLIO</title>
+    <!-- Locomotive Scroll + GSAP -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --dark: #2D3436;
+            --light: #FDCB6E;
+            --accent: #FD79A8;
+            --secondary: #00B894;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap');
+        
+        html.has-scroll-smooth {
+            overflow: hidden;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+            cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxMCIgZmlsbD0iI0ZENzlBOCIvPjwvc3ZnPg=='), auto;
+        }
+        
+        /* CUSTOM CURSOR */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            mix-blend-mode: difference;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+        }
+        
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.4s ease, width 0.3s ease, height 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        /* HEADER WITH GLITCH EFFECT */
+        header {
+            height: 100vh;
+            background: linear-gradient(135deg, var(--dark), #000);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary);
+            margin-bottom: 30px;
+            box-shadow: 0 0 50px rgba(108, 92, 231, 0.6);
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(253, 121, 168, 0.3);
+        }
+        
+        .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .contact-info a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 12px 25px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .contact-info a:hover {
+            transform: translateY(-5px) scale(1.05);
+            background: var(--primary);
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.5);
+        }
+        
+        /* BACKGROUND ELEMENTS */
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .bg-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: 20%;
+            left: 10%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .bg-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            bottom: 10%;
+            right: 15%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+        
+        .bg-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--light);
+            top: 60%;
+            left: 30%;
+            animation: float 7s ease-in-out infinite 2s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-50px) rotate(5deg); }
+        }
+        
+        /* SECTIONS */
+        section {
+            min-height: 100vh;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 80px;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform-origin: left;
+        }
+        
+        /* ABOUT SECTION */
+        #about {
+            background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
+        }
+        
+        .about-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .about-content::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNNDQ4IDI1NkM0NDggMTI1LjEgMzQyLjkgMjAgMjEyIDIwUy0yMCAxMjUuMS0yMCAyNTZzMTA1LjEgMjM2IDIzNiAyMzYgMjM2LTEwNS4xIDIzNi0yMzZ6IiBmaWxsPSJub25lIiBzdHJva2U9IiM2QzVDRTciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIxMCwxMCIvPjwvc3ZnPg==') no-repeat;
+            opacity: 0.1;
+            z-index: -1;
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* SKILLS SECTION */
+        #skills {
+            background: var(--dark);
+            color: white;
+        }
+        
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .skill-category {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .skill-category:hover {
+            transform: translateY(-20px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            background: rgba(108, 92, 231, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .skill-category h3 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .skill-category h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        .skills-list {
+            list-style: none;
+        }
+        
+        .skills-list li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .skills-list li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        
+        /* PROJECTS SECTION */
+        #projects {
+            background: linear-gradient(45deg, #f5f7fa, #e6e9f0);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 1;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-20px) rotate(2deg);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+        }
+        
+        .project-card:hover::before {
+            opacity: 0.1;
+        }
+        
+        .project-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .project-card:hover .project-img {
+            transform: scale(1.1) rotate(1deg);
+        }
+        
+        .project-content {
+            padding: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .project-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-weight: 700;
+        }
+        
+        .project-description {
+            margin-bottom: 25px;
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .tech-tag {
+            background: rgba(108, 92, 231, 0.1);
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-tag:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .project-links a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .project-links a:first-child {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+        }
+        
+        .project-links a:last-child {
+            background: var(--dark);
+            box-shadow: 0 5px 20px rgba(45, 52, 54, 0.3);
+        }
+        
+        .project-links a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* EXPERIENCE SECTION */
+        #experience {
+            background: var(--dark);
+            color: white;
+        }
+        
+        .experience-item {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            transition: all 0.5s ease;
+        }
+        
+        .experience-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .experience-item:hover::before {
+            width: 10px;
+        }
+        
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .exp-role {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .exp-company {
+            color: var(--light);
+            font-weight: 600;
+        }
+        
+        .exp-period {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+        
+        .exp-details ul {
+            list-style: none;
+        }
+        
+        .exp-details li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.7;
+        }
+        
+        .exp-details li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        
+        /* EDUCATION SECTION */
+        #education {
+            background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
+        }
+        
+        .education-item {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .education-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transition: all 0.5s ease;
+        }
+        
+        .education-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+        }
+        
+        .education-item:hover::before {
+            height: 10px;
+        }
+        
+        .edu-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .edu-degree {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .edu-institution {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .edu-period {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .edu-details ul {
+            list-style: none;
+        }
+        
+        .edu-details li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.7;
+        }
+        
+        .edu-details li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, var(--dark), #000);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer h3 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        footer p {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            line-height: 1.7;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .footer-links a:hover {
+            transform: translateY(-5px) scale(1.05);
+            background: var(--primary);
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.5);
+        }
+        
+        .copyright {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .contact-info a {
+                margin: 10px;
+                padding: 10px 20px;
+            }
+            
+            h2 {
+                font-size: 2rem;
+                margin-bottom: 50px;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-links {
+                flex-direction: column;
+            }
+            
+            .project-links a {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body data-scroll-container>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    
+    <!-- Header Section -->
+    <header data-scroll-section>
+        <div class="bg-element bg-1"></div>
+        <div class="bg-element bg-2"></div>
+        <div class="bg-element bg-3"></div>
+        
+        <div class="header-content">
+            <img src="Potfolio4.png" alt="Profile" class="profile-img" data-scroll-speed="1">
+            <h1 data-scroll data-scroll-speed="0.8">Sujal Singh Gaharwar</h1>
+            <p class="tagline" data-scroll data-scroll-speed="0.6">Cybersecurity Learner | Tech Explorer | Command Line Dreamer</p>
+            <div class="contact-info">
+                <a href="mailto:sgaharwar143@gmail.com" data-scroll data-scroll-speed="0.4">✉ Email Me</a>
+                <a href="https://www.linkedin.com/in/sujal-singh-gaharwar-771992286?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" data-scroll data-scroll-speed="0.3">🔗 LinkedIn</a>
+                <a href="https://github.com/SSG-143" data-scroll data-scroll-speed="0.2">💻 GitHub</a>
+                <a href="#" data-scroll data-scroll-speed="0.1">📄 Resume</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- About Section -->
+    <section id="about" data-scroll-section>
+        <div class="container">
+            <h2 data-scroll data-scroll-speed="0.8">About Me</h2>
+            <div class="about-content" data-scroll data-scroll-speed="0.6">
+                <p>
+                    I'm a tech-savvy and curious mind with a deep passion for cybersecurity, ethical hacking,
+                    and Linux-based systems. Whether it's exploring vulnerabilities, tweaking Ubuntu setups, 
+                    or crafting interactive websites, I thrive at the intersection of creativity and problem-solving.
+                    Currently exploring freelance and remote opportunities, I love working on real-world challenges and continuously leveling up my skills.
+                    My long-term goal? To become a top-tier penetration tester and contribute to building a safer digital world.
+                </p>
+                <p>
+                    I enjoy diving into the depths of code, breaking things ethically to learn how to build them better, 
+                    and staying updated with the ever-evolving world of tech.
+                </p>
+               
+            </div>
+        </div>
+    </section>
+    
+    <!-- Skills Section -->
+    <section id="skills" data-scroll-section>
+        <div class="container">
+            <h2 data-scroll data-scroll-speed="0.8">Skills</h2>
+            <div class="skills-container">
+                <div class="skill-category" data-scroll data-scroll-speed="0.6">
+                    <h3>Development & languages</h3>
+                    <ul class="skills-list">
+                        <li>HTML5, CSS3, JavaScript </li>
+                        <li>Python</li>
+                        <li>PHP</li>
+                        <li>CMD & PowerShell</li>
+                        <li>MySQL</li>
+                        <!-- <li>SVG Animations</li> -->
+                    </ul>
+                </div>
+                <div class="skill-category" data-scroll data-scroll-speed="0.4">
+                    <h3>Technologies</h3>
+                    <ul class="skills-list">
+                        <li>Linux</li>
+                        <li>Office Automation With Microsoft and Libre Office </li>
+                        <li>Autodesk Sketchbook</li>
+                        <li>Synfig Studio</li>
+                        <li>Artifitial Intelligence</li>
+                        <li>GitHub</li>
+                    </ul>
+                </div>
+                <div class="skill-category" data-scroll data-scroll-speed="0.2">
+                    <h3>Tools</h3>
+                    <ul class="skills-list">
+                        <li>WSL & Turmux</li>
+                        <li>Metasploid, Nmap, Wireshark, Hydra</li>
+                        <li>Copiolet & Chatbots </li>
+                        <li>Osint Tools</li>
+                        <!-- <li>Framer Motion</li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Projects Section -->
+    <section id="projects" data-scroll-section>
+        <div class="container">
+            <h2 data-scroll data-scroll-speed="0.8">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card" data-scroll data-scroll-speed="0.6">
+                    <div class="project-img" style="background-color: #6C5CE7;"></div>
+                    <div class="project-content">
+                        <h3 class="project-title">Motion Gallery</h3>
+                        <p class="project-description">
+                            An interactive showcase of modern web animations with fluid transitions and scroll-triggered effects.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">GSAP</span>
+                            <span class="tech-tag">Locomotive Scroll</span>
+                            <span class="tech-tag">Three.js</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#">Live Demo</a>
+                            <a href="#">View Code</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card" data-scroll data-scroll-speed="0.4">
+                    <div class="project-img" style="background-color: #FD79A8;"></div>
+                    <div class="project-content">
+                        <h3 class="project-title">3D Portfolio</h3>
+                        <p class="project-description">
+                            A portfolio website featuring 3D elements, smooth scrolling, and immersive transitions.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Three.js</span>
+                            <span class="tech-tag">WebGL</span>
+                            <span class="tech-tag">GSAP</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#">Live Demo</a>
+                            <a href="#">View Code</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card" data-scroll data-scroll-speed="0.2">
+                    <div class="project-img" style="background-color: #00B894;"></div>
+                    <div class="project-content">
+                        <h3 class="project-title">Interactive Story</h3>
+                        <p class="project-description">
+                            A narrative experience with scroll-driven animations and dynamic content loading.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">ScrollMagic</span>
+                            <span class="tech-tag">CSS Animations</span>
+                            <span class="tech-tag">SVG</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#">Live Demo</a>
+                            <a href="#">View Code</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Experience Section -->
+    <section id="experience" data-scroll-section>
+        <div class="container">
+            <h2 data-scroll data-scroll-speed="0.8">Experience</h2>
+            <div class="experience-item" data-scroll data-scroll-speed="0.6">
+                <div class="exp-header">
+                    <div>
+                        <span class="exp-role">Debugger & Editor </span> at <span class="exp-company">MGVP News</span>
+                    </div>
+                    <div class="exp-period">2023 - 2024</div>
+                </div>
+                <div class="exp-details">
+                    <ul>
+                        <li>Debugging of the code , correction of informations and data</li>
+                        <li>Editing of content on daily basis</li>
+                        <li>Optimized animation performance across devices and browsers</li>
+                        <li>Changes over foul alignment and syntax errors</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="experience-item" data-scroll data-scroll-speed="0.4">
+                <div class="exp-header">
+                    <div>
+                        <span class="exp-role">UI Improver & Debugger</span> at <span class="exp-company">DoduoGames</span>
+                    </div>
+                    <div class="exp-period">2024 - 2025</div>
+                </div>
+                <div class="exp-details">
+                    <ul>
+                        <li>UI improvement over every page</li>
+                        <li>Collaborated with Developer for major Bug-fixes</li>
+                        <li>Creation of important buttons over game pages</li>
+                        <li>Removal of Unneccessary code</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Education Section -->
+    <section id="education" data-scroll-section>
+        <div class="container">
+            <h2 data-scroll data-scroll-speed="0.8">Education</h2>
+            <div class="education-item" data-scroll data-scroll-speed="0.6">
+                <div class="edu-header">
+                    <div>
+                        <span class="edu-degree">Bachlor Of Computer Application</span> at <span class="edu-institution">Makhanlal Chaturvedi University, Rewa</span>
+                    </div>
+                    <div class="edu-period">2023 - 2026</div>
+                </div>
+                <div class="edu-details">
+                    <ul>
+                        <li>Specialization in Multiple Languages & Technologies</li>
+                        <li>Multiple Webinars, Industrial Visits, and Campus Visits of Industrial Experts and Thought Leaders</li>
+                        <li>Practical & Lab experience in Presence of experienced Mentors</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer data-scroll-section>
+        <!-- <div class="bg-element bg-1"></div>
+        <div class="bg-element bg-2"></div> -->
+        <h3 data-scroll data-scroll-speed="0.8">Let's Build, Break, and Secure the Web</h3>
+        <p data-scroll data-scroll-speed="0.6">
+           I'm a curious developer who thrives on Linux, loves digging into systems, and believes in ethical hacking for a better digital world.<br>
+           If you're into open-source, cybersecurity, or just want to collaborate on something awesome — let's connect!
+        </p>
+        <div class="footer-links">
+            <a href="mailto:sgaharwar143@gmail.com" data-scroll data-scroll-speed="0.4">✉ Email Me</a>
+            <a href="https://x.com/sgaharwar143" data-scroll data-scroll-speed="0.3">💬 Twitter</a>
+            <a href="https://www.linkedin.com/in/sujal-singh-gaharwar-771992286?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" data-scroll data-scroll-speed="0.2">💼 LinkedIn</a>
+            <a href="tel:+916232187083" data-scroll data-scroll-speed="0.1">📞 Call Me</a>
+        </div>
+        <p class="copyright" data-scroll data-scroll-speed="0.1">© 2025 Sujal Singh Gaharwar . All rights reserved.</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Locomotive Scroll with smooth scrolling
+            const scroll = new LocomotiveScroll({
+                el: document.querySelector('[data-scroll-container]'),
+                smooth: true,
+                smartphone: {
+                    smooth: true,
+                    breakpoint: 0
+                },
+                tablet: {
+                    smooth: true,
+                    breakpoint: 0
+                },
+                // Enhanced motion settings
+                lerp: 0.05, // Smoother but more resource intensive
+                multiplier: 1.5,
+                firefoxMultiplier: 60,
+                touchMultiplier: 3,
+                scrollFromAnywhere: true
+            });
+            
+            // Custom cursor effect
+            const cursor = document.querySelector('.cursor');
+            const cursorFollower = document.querySelector('.cursor-follower');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
+                
+                // Delay the follower cursor slightly for a trailing effect
+                gsap.to(cursorFollower, {
+                    x: e.clientX - cursorFollower.offsetWidth / 2,
+                    y: e.clientY - cursorFollower.offsetHeight / 2,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
+            
+            // Cursor hover effects
+            const hoverElements = document.querySelectorAll('a, button, .project-card, .skill-category');
+            
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.width = '40px';
+                    cursor.style.height = '40px';
+                    cursor.style.backgroundColor = 'transparent';
+                    cursor.style.border = '2px solid var(--accent)';
+                    
+                    cursorFollower.style.width = '60px';
+                    cursorFollower.style.height = '60px';
+                    cursorFollower.style.backgroundColor = 'var(--primary)';
+                    cursorFollower.style.opacity = '0.3';
+                });
+                
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.width = '20px';
+                    cursor.style.height = '20px';
+                    cursor.style.backgroundColor = 'var(--accent)';
+                   
+                    cursor.style.border = 'none';
+                    cursorFollower.style.width = '40px';
+                    cursorFollower.style.height = '40px';
+                    cursorFollower.style.backgroundColor = 'var(--primary)';    
+                    cursorFollower.style.opacity = '0.1';
+                });
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animate sections on scroll
+        const sections = document.querySelectorAll('section');
+        
+        sections.forEach(section => {
+            gsap.from(section, {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                    end: "bottom 20%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+        });
+        // Animate header on scroll
+        gsap.from('.header-content', {
+            opacity: 0,
+            y: -50,
+            duration: 1,
+            scrollTrigger: {
+                trigger: '.header-content',
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+        // Animate footer on scroll
+        gsap.from('footer', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            scrollTrigger: {
+                trigger: 'footer',
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/locomotive-scroll/4.1.4/locomotive-scroll.min.js"></script>
+    <script>
+        // Initialize Locomotive Scroll
+        const scroll = new LocomotiveScroll({
+            el: document.querySelector('[data-scroll-container]'),
+            smooth: true,
+            smartphone: {
+                smooth: true,
+                breakpoint: 0
+            },
+            tablet: {
+                smooth: true,
+                breakpoint: 0
+            }
+        });
+        // Update Locomotive Scroll on resize
+        window.addEventListener('resize', () => {
+            scroll.update();
+        });
+        // Update Locomotive Scroll on load
+        window.addEventListener('load', () => {
+            scroll.update();
+        });
+        // Update Locomotive Scroll on scroll
+        document.addEventListener('scroll', () => {
+            scroll.update();
+        });
+        // Update Locomotive Scroll on mouse move
+        document.addEventListener('mousemove', () => {
+            scroll.update();
+        });
+        // Update Locomotive Scroll on touch move   
+
+        document.addEventListener('touchmove', () => {
+            scroll.update();
+        });
+        // Update Locomotive Scroll on wheel
+        document.addEventListener('wheel', () => {
+            scroll.update();
+        });
+        // Update Locomotive Scroll on touch end
+        document.addEventListener('touchend', () => {
+            scroll.update();
+        });
+        // Update Locomotive Scroll on touch cancel
+        document.addEventListener('touchcancel', () => {
+            scroll.update();
+        });
+        // Update Locomotive Scroll on touch start
+        document.addEventListener('touchstart', () => {
+            scroll.update();
+        });
+        
+
+   
+
+</body>
+
+</html>
